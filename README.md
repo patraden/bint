@@ -1,6 +1,6 @@
 # longnumbers
 custom data type
-#git commands
+# git commands
 cat /home/pi/.gitconfig #user git config file
 git config --list --show-origin #show entire config
 git config user.name #show config user
@@ -11,6 +11,6 @@ git remote -v
 git add .
 git commit -m "new commit"
 git push origin master
-#useful git links
+# useful git links
 https://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes
 
