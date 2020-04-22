@@ -1,10 +1,10 @@
 # longnumbers
 custom data type
 # git commands
-cat /home/pi/.gitconfig #user git config file
-git config --list --show-origin #show entire config
-git config user.name #show config user
-git config user.email #show config email
+cat /home/pi/.gitconfig #user git config file /n
+git config --list --show-origin #show entire config /n
+git config user.name #show config user /n
+git config user.email #show config email /n
 git config --global user.email "denis.patrakhin@gmail.com" #configure email
 git remote show origin #show repository details
 git remote -v
