@@ -4,50 +4,65 @@ Custom·float·class·to·simulate·basic·arithmetic·operations
 Main·idea·is·to·learn·and··practice·OOP·in·Python.
 
 Test cases for module.
->>> a = FixedPointNum(5)
+>>> a = bint(25)
 >>> print(a)
-00000000000000000000000000000101
->>> a = FixedPointNum(-5)
->>> print(a)
-10000000000000000000000000000101
->>> a = FixedPointNum(0)
->>> print(a)
-00000000000000000000000000000000
+25|11001
+>>> b=a+46
+>>> print(b)
+71|1000111
+>>> b=bint(-12167319231)
+>>> print(abs(b))
+12167319231|1011010101001110101000111010111111
 """
 
-FIXED_POINT_NUM_BITS = 32
+class bint(int):
+    """Custom int class with redefined basic operations"""
 
-class FixedPointNum(object):
-    """
-    Fixed point number class storing number as binary in python list.
-    """
+    def __new__(value, *args, **kwargs):
 
-    def __init__(self, n):
-        """
-        Initiate class example.
-        """
-        assert type(n) is int
-        if n >= 0:
-            self.direct = list(map(int, format(n, '0{}b'.format(FIXED_POINT_NUM_BITS))))
-        else:
-            self.direct = [1] + list(map(int, format(n, '0{}b'.format(FIXED_POINT_NUM_BITS))[1:]))
-        self.reversed = None
-        self.extended = None
+        return int.__new__(value,*args, **kwargs)
 
-    def reverse(self):
-        """
-        Calculates reverse form of fixed point number.
-        """
-        self.reversed = [not(x) for x in self.direct[1:]] if self.direct[0] else self.direct
+    def __init__(self, *args, **kwargs):
 
-    def extend(self):
-        """
-        Calculates reverse form of fixed point number.
-        """
-        pass
+        super().__init__()
+        self.name = None
 
     def __str__(self):
-        return ''.join(str(x) for x in self.direct)
+
+
+        return super().__str__() + '|' + format(self, 'b')
+
+    def __repr__(self):
+
+        return self.__str__()
+
+    def __add__(self, other):
+
+        if self > 0 and other >0:
+            return self._add(other)
+        else:
+            return
+
+    def _is_negative(self):
+
+        return self >> self.bit_length()
+
+    def __abs__(self):
+
+        if self._is_negative():
+            return bint(~self) + 1
+        return self
+
+    def _add(self, other):
+        """Auxilary addition"""
+
+        assert type(other) in (int, bint)
+        # r - register
+        # s - bitwise temporary sum
+        r,s = (self & other) << 1, self ^ other
+        while r:
+            r,s = (s & r) << 1, s ^ r
+        return bint(s)
 
 if __name__ == "__main__":
     import doctest
