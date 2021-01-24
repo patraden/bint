@@ -19,43 +19,34 @@ class bint(int):
     """Custom int class with redefined basic operations"""
 
     def __new__(value, *args, **kwargs):
-
         return int.__new__(value,*args, **kwargs)
 
     def __init__(self, *args, **kwargs):
-
         super().__init__()
         self.name = None
 
     def __str__(self):
-
-
         return super().__str__() + '|' + format(self, 'b')
 
     def __repr__(self):
-
         return self.__str__()
 
     def __add__(self, other):
-
         if self > 0 and other >0:
             return self._add(other)
         else:
             return
 
     def _is_negative(self):
-
         return self >> self.bit_length()
 
     def __abs__(self):
-
         if self._is_negative():
             return bint(~self) + 1
         return self
 
     def _add(self, other):
         """Auxilary addition"""
-
         assert type(other) in (int, bint)
         # r - register
         # s - bitwise temporary sum
