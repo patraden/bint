@@ -47,7 +47,10 @@ class bint(int):
         return self
 
     def _add(self, other):
-        """Auxilary addition"""
+        """
+        Auxilary addition method
+        ***algorythm description***
+        """
 
         assert type(other) in (int, bint)
         max_bit = max(self.bit_length(), other.bit_length()) + 1
@@ -59,21 +62,23 @@ class bint(int):
             r,s = (s & r) << 1, s ^ r
 
         if r & r_mask: # checking  if register left (vs max bit size) remainder has any bits
-            tmp = r >> max_bit
-            shift_cnt = 0
-            while tmp !=1:
-                tmp = tmp >> 1
-                shift_cnt += 1
-            r_mask = r_mask << shift_cnt
-            if s >> (max_bit + shift_cnt)== -1:
-                s = s ^ r_mask
+            r = r >> max_bit
+            r_shifts = 0
+
+            while r !=1: #finding remaining bit in register
+                r = r >> 1
+                r_shift += 1
+
+            r_mask = r_mask << r_shifts
+            if s >> (max_bit + r_shifts)== -1: # esnuring left sum remainder contains bits only, no zeroes
+                s = s ^ r_mask # changing all left sum remainder bits to zeroes
             else:
                 raise Exception ('Impossible case!')
         return bint(s)
 
 if __name__ == "__main__":
     import doctest
-    a = bint(-11123123213131231)
-    b= bint(53217627162139)
+    a = bint(-11)
+    b= bint(3)
     print(a+b)
 #    doctest.testmod(verbose=True)
