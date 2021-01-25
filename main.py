@@ -13,6 +13,10 @@ Test cases for module.
 >>> b=bint(-12167319231)
 >>> print(abs(b))
 12167319231|1011010101001110101000111010111111
+>>> a = bint(-50)
+>>> b= bint(-50)
+>>> print(a+b)
+-45
 """
 
 class bint(int):
@@ -32,10 +36,7 @@ class bint(int):
         return self.__str__()
 
     def __add__(self, other):
-        if self > 0 and other >0:
-            return self._add(other)
-        else:
-            return
+        return self._add(other)
 
     def _is_negative(self):
         return self >> self.bit_length()
@@ -47,14 +48,32 @@ class bint(int):
 
     def _add(self, other):
         """Auxilary addition"""
+
         assert type(other) in (int, bint)
-        # r - register
-        # s - bitwise temporary sum
+        max_bit = max(self.bit_length(), other.bit_length()) + 1
+
+        r_mask = -1 << max_bit # register size mask 1..10..0
         r,s = (self & other) << 1, self ^ other
-        while r:
+
+        while r and r & ~r_mask:
             r,s = (s & r) << 1, s ^ r
+
+        if r & r_mask: # checking  if register left (vs max bit size) remainder has any bits
+            tmp = r >> max_bit
+            shift_cnt = 0
+            while tmp !=1:
+                tmp = tmp >> 1
+                shift_cnt += 1
+            r_mask = r_mask << shift_cnt
+            if s >> (max_bit + shift_cnt)== -1:
+                s = s ^ r_mask
+            else:
+                raise Exception ('Impossible case!')
         return bint(s)
 
 if __name__ == "__main__":
     import doctest
-    doctest.testmod(verbose=True)
+    a = bint(-11123123213131231)
+    b= bint(53217627162139)
+    print(a+b)
+#    doctest.testmod(verbose=True)
