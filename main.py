@@ -49,11 +49,13 @@ class bint(int):
         Algorythm relies on assumption that python always interprets integers as 2’s compliment with binarywise operations.
         s var represents sum output.
         c var represents carry output.
-        bitmask var requires to treat situations with "travelling" bit in carry variable.
+        bitmask var is required to handle "travellingi bit" situations.
+        "travelling bit" situation happens in main algorythm when carry has single bit remaining in certain position.
+        While s left remainder (to the same position) has all bits (s is negative).
+        in this case remaining bit in carry keeps travelling left through alrorythm and loop does not exit.
         """
 
         max_bit_pos = max(self.bit_length(), other.bit_length()) + 1
-
         bitmask = -1 << max_bit_pos
         _bitmask = ~bitmask
 
@@ -62,7 +64,7 @@ class bint(int):
         while c and c & _bitmask:
             c,s = (s & c) << 1, s ^ c
 
-        # exception check for remaining bit in carry variable
+        # exception check for "travelling" bit in carry variable
         if c & bitmask:
 
             c = c >> max_bit_pos
@@ -72,12 +74,13 @@ class bint(int):
                 c = c >> 1
                 shifts += 1
 
-            # changing bitmask to apply to left bits remainder of sum output
+            # adjusting bitmask to zero left bits remainder of sum
             bitmask = bitmask << shifts
-            # esnuring left bits remainder in sum output
+            # esnure left bits remainder in sum has expected structure
             if s >> (max_bit_pos + shifts) == -1:
                 s = s ^ bitmask
             else:
+            # in theory any different sum remainder structure is not possible
                 raise Exception ('Impossible case!')
         return bint(s)
 
