@@ -1,7 +1,6 @@
 """
-Custom·float·class·to·simulate·basic·arithmetic·operations
- (addition,·subtraction,·multiplication,·division).
-Main·idea·is·to·learn·and··practice·OOP·in·Python.
+Experimental custom int class·to·simulate·CPU algorythms for basic·arithmetics (+-*/).
+Main·purpose·is·to·learn·and·practice·OOP·in·Python.
 
 Test cases for module.
 >>> a = bint(25)
@@ -94,12 +93,15 @@ if __name__ == "__main__":
     import doctest
     doctest.testmod(verbose=False)
     import time
+
     n = 45455
     nb = bint(n)
+
     t0= time.perf_counter()
     print(nsqr(n))
     t1 = time.perf_counter()
     print("Time elapsed: ", t1 - t0) # CPU seconds elapsed (floating point)
+
     t0= time.perf_counter()
     print(nsqr(nb))
     t1 = time.perf_counter()

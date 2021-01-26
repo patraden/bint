@@ -1,2 +1,2 @@
-# bint python class
-custom·integer·data·type·with·undefined·arithmetic·and·basic·methods·using·binary wise·operations
+# bint
+An experimental custom·integer·data·type·for pythom.
