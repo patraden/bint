@@ -12,10 +12,10 @@ Test cases for module.
 >>> b=bint(-12167319231)
 >>> print(abs(b))
 12167319231
->>> a = bint(-50)
+>>> a = bint(-5450)
 >>> b= bint(5)
 >>> print(a+b)
--45
+-5445
 """
 
 class bint(int):
