@@ -1,5 +1,5 @@
 """
-Experimental custom int class·to·simulate·CPU algorythms for basic·arithmetics (+-*/).
+Experimental custom int class·to·simulate·CPU arithmetics on fixed point numbers (+-*/).
 Main·purpose·is·to·learn·and·practice·OOP·in·Python.
 
 Test cases for module.
