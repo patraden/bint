@@ -3,26 +3,24 @@ Experimental custom int class·to·simulate·CPU arithmetics on fixed point numb
 Main·purpose·is·to·learn·and·practice·OOP·in·Python.
 
 Test cases for module.
->>> a = bint(25)
->>> b = a + 46
->>> print(b - a)
-46
->>> b = bint(-12167319231)
->>> print(abs(b))
-12167319231
->>> a = bint(-54)
->>> b = bint(5)
->>> print(a + b)
--49
->>> print(-a)
-54
->>> print(-a-b)
-49
+
+>>> a = -2321531871332173218312021309138193213031225
+>>> b = 222732132132131231231211231332131
+>>> ab = bint(a)
+>>> bb = bint(b)
+>>> print(ab+bb-a-b)
+0
+>>> print(ab-bb-a+b)
+0
+>>> b = -12167319231
+>>> bb = bint(b)
+>>> print(abs(bb)-abs(b))
+0
 >>> a = 13219316732197361931293612831283912389138172987391836
 >>> b = -183213187382173102312322817382781378217310273292379103701293729017
 >>> ab = bint(a)
 >>> bb = bint(b)
->>> print(a*b - ab*bb)
+>>> print(a*b-ab*bb)
 0
 """
 
@@ -52,13 +50,16 @@ class bint(int):
 
     def __abs__(self):
         if self >> self.bit_length():
-            return bint(~self) + 1
+            return ~self + 1
         return self
 
     def _mul(self, other):
         """
         Auxilary multiplication method.
         Algorythm mimics multiplier circuit of CPU.
+        Algorythm relies on assumption that python always interprets integers as 2’s compliment with binarywise operations.
+        "muld" var represents multiplicand.
+        "mulr" var represents multiplier.
         """
 
         s_bitsize = self.bit_length()
@@ -67,7 +68,7 @@ class bint(int):
         o_sign = other >> o_bitsize
         p_sign = s_sign ^ o_sign
 
-        # get multiplier with the shortest length to minimze additions
+        # get multiplier with shortest length to minimze additions
         if s_bitsize < o_bitsize:
             muld = ~other + 1 if o_sign else other
             mulr = ~self + 1 if s_sign else self
@@ -77,10 +78,9 @@ class bint(int):
             mulr = ~other + 1 if o_sign else other
             mulr_bitsize = o_bitsize
 
+        # main algorythm
         prod = 0
         mulr_bit = 0
-
-        # main algorythm
         while mulr_bit < mulr_bitsize:
             mulr_bit_val = mulr & (1 << mulr_bit)
             if mulr_bit_val:
@@ -133,6 +133,8 @@ class bint(int):
                 raise Exception ('Impossible case!')
         return s
 
+# test functions
+
 def nsqr (n):
     result = n
     for i in range(abs(n)-1):
@@ -150,18 +152,19 @@ def fact(n):
 
 if __name__ == "__main__":
     import doctest
-    doctest.testmod(verbose=True)
+    doctest.testmod(verbose=False)
 
+# performance comparison
     import time
-    n = 16000
+    n = 37777
     nb = bint(n)
     t0= time.perf_counter()
-#    print(fact(n))
-    c = fact(n)
+#    c = fact(n)
+    c = nsqr(n)
     t1 = time.perf_counter()
-    print("Time elapsed: ", t1 - t0) # CPU seconds elapsed (floating point)
+    print("Time elapsed: ", t1 - t0)
     t0= time.perf_counter()
-#    print(fact(nb))
-    d = fact(nb)
+#    d = fact(nb)
+    d = nsqr(nb)
     t1 = time.perf_counter()
-    print("Time elapsed: ", t1 - t0) # CPU seconds elapsed (floating point)
+    print("Time elapsed: ", t1 - t0)
