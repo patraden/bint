@@ -70,12 +70,12 @@ class bint(int):
 
         # get multiplier with shortest length to minimze additions
         if s_bitsize < o_bitsize:
-            muld = ~other + 1 if o_sign else other
-            mulr = ~self + 1 if s_sign else self
+            muld = -other if o_sign else other
+            mulr = -self if s_sign else self
             mulr_bitsize = s_bitsize
         else:
-            muld = ~self + 1 if s_sign else self
-            mulr = ~other + 1 if o_sign else other
+            muld = -self if s_sign else self
+            mulr = -other if o_sign else other
             mulr_bitsize = o_bitsize
 
         # main algorythm
@@ -156,15 +156,15 @@ if __name__ == "__main__":
 
 # performance comparison
     import time
-    n = 37777
+    n = 5698
     nb = bint(n)
     t0= time.perf_counter()
-#    c = fact(n)
-    c = nsqr(n)
+    c = fact(n)
+#    c = nsqr(n)
     t1 = time.perf_counter()
     print("Time elapsed: ", t1 - t0)
     t0= time.perf_counter()
-#    d = fact(nb)
-    d = nsqr(nb)
+    d = fact(nb)
+#    d = nsqr(nb)
     t1 = time.perf_counter()
     print("Time elapsed: ", t1 - t0)
