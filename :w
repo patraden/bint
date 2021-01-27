@@ -6,30 +6,26 @@ Test cases for module.
 >>> a = bint(25)
 >>> print(a)
 25
->>> b = a + 46
+>>> b=a+46
 >>> print(b)
 71
->>> b = bint(-12167319231)
+>>> b=bint(-12167319231)
 >>> print(abs(b))
 12167319231
 >>> a = bint(-54)
->>> b = bint(5)
->>> print(a + b)
+>>> b= bint(5)
+>>> print(a+b)
 -49
+>>> print(a*b)
+-54
 >>> print(-a)
 54
 >>> print(-a-b)
 49
->>> a = 13219316732197361931293612831283912389138172987391836
->>> b = -183213187382173102312322817382781378217310273292379103701293729017
->>> ab = bint(a)
->>> bb = bint(b)
->>> print(a*b - ab*bb)
-0
 """
 
 class bint(int):
-    """Custom class, a child of int"""
+    """Custom int class.A child of build-in int class"""
 
     def __new__(value, *args, **kwargs):
         return int.__new__(value,*args, **kwargs)
@@ -53,44 +49,37 @@ class bint(int):
         return self + (-other)
 
     def __abs__(self):
-        if self >> self.bit_length():
+        if self._is_negative():
             return bint(~self) + 1
         return self
+
+    def _is_negative(self):
+        """Aux method returning sign bit value"""
+        return self >> self.bit_length()
 
     def _mul(self, other):
         """
         Auxilary multiplication method.
         """
 
-        s_bitsize = self.bit_length()
-        o_bitsize = other.bit_length()
-        s_sign = self >> s_bitsize
-        o_sign = other >> o_bitsize
-        p_sign = s_sign ^ o_sign
+        self_bitsize = self.bit_length()
+        other_bitsize = other.bit_length()
 
-        # get multiplier with shorter length to minimze additions count
-        if s_bitsize < o_bitsize:
-            muld = ~other + 1 if o_sign else other
-            mulr = ~self + 1 if s_sign else self
-            mulr_bitsize = s_bitsize
+        if self_bitsize < other_bitsize:
+            muld = other # multiplicand
+            mulr = self # multiplier
+            mulr_bitsize = self_bitsze
         else:
-            muld = ~self + 1 if s_sign else self
-            mulr = ~other + 1 if o_sign else other
-            mulr_bitsize = o_bitsize
+            muld = self # multiplicand
+            mulr = other # multiplier
 
-        prod = 0
-        mulr_bit = 0
+        mld_bit_l = self.bit_length()
+        mlr_bit_l = other.bit_length()
+        current_bit = 1
 
-        # main algorythm
-        while mulr_bit < mulr_bitsize:
-            mulr_bit_val = mulr & (1 << mulr_bit)
-            if mulr_bit_val:
-                prod += muld << mulr_bit
-            mulr_bit += 1
-
-        if p_sign:
-            return -prod
-        return prod
+        while current_bit < 
+            pass
+        return #result
 
     def _add(self, other):
         """
