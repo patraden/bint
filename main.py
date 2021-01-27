@@ -4,11 +4,9 @@ Main·purpose·is·to·learn·and·practice·OOP·in·Python.
 
 Test cases for module.
 >>> a = bint(25)
->>> print(a)
-25
 >>> b = a + 46
->>> print(b)
-71
+>>> print(b - a)
+46
 >>> b = bint(-12167319231)
 >>> print(abs(b))
 12167319231
@@ -60,6 +58,7 @@ class bint(int):
     def _mul(self, other):
         """
         Auxilary multiplication method.
+        Algorythm mimics multiplier circuit of CPU.
         """
 
         s_bitsize = self.bit_length()
@@ -140,18 +139,29 @@ def nsqr (n):
         result = n + result
     return result
 
+def fact(n):
+    if type(n) == bint:
+        result = bint(1)
+    else:
+        result = 1
+    for i in range(1,n+1,1):
+        result = result * i
+    return result
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod(verbose=True)
 
-#    import time
-#    n = 45455
-#    nb = bint(n)
-#    t0= time.perf_counter()
-#    print(nsqr(n))
-#    t1 = time.perf_counter()
-#    print("Time elapsed: ", t1 - t0) # CPU seconds elapsed (floating point)
-#    t0= time.perf_counter()
-#    print(nsqr(nb))
-#    t1 = time.perf_counter()
-#    print("Time elapsed: ", t1 - t0) # CPU seconds elapsed (floating point)
+    import time
+    n = 16000
+    nb = bint(n)
+    t0= time.perf_counter()
+#    print(fact(n))
+    c = fact(n)
+    t1 = time.perf_counter()
+    print("Time elapsed: ", t1 - t0) # CPU seconds elapsed (floating point)
+    t0= time.perf_counter()
+#    print(fact(nb))
+    d = fact(nb)
+    t1 = time.perf_counter()
+    print("Time elapsed: ", t1 - t0) # CPU seconds elapsed (floating point)
