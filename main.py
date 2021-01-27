@@ -67,7 +67,7 @@ class bint(int):
         o_sign = other >> o_bitsize
         p_sign = s_sign ^ o_sign
 
-        # get multiplier with shorter length to minimze additions count
+        # get multiplier with the shortest length to minimze additions
         if s_bitsize < o_bitsize:
             muld = ~other + 1 if o_sign else other
             mulr = ~self + 1 if s_sign else self
