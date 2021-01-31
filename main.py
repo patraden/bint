@@ -4,40 +4,26 @@ Main·purpose·is·to·learn·and·practice·OOP·in·Python.
 
 Test cases for module.
 
->>> a = -2321531871332173218312021309138193213031225
->>> b = -222732132132131231231211231332131
+>>> a = 33
+>>> b = a - 31 # 2
 >>> ab = bint(a)
 >>> bb = bint(b)
->>> print(b.bit_length() - bb.bit_length())
-0
 >>> print(ab+bb-a-b)
 0
 >>> print(ab-bb-a+b)
 0
->>> b = -12167319231
->>> bb = bint(b)
 >>> print(abs(bb)-abs(b))
 0
->>> a = 13219316732197361931293612831283912389138172987391836
->>> b = 3102312322817382781378217310273292379103701293729017
->>> ab = bint(a)
->>> bb = bint(b)
 >>> print(a*b-ab*bb)
+0
+>>> print(ab//bb)
 0
 >>> print(ab==bb)
 False
->>> ab = bint(89)
->>> bb = bint(89)
->>> print(ab==bb)
+>>> print(ab==bb-1)
 True
->>> ab = bint(809)
->>> bb = bint(89)
 >>> print(ab!=bb)
 True
->>> a = 136321763217321721219316732197361931293612831283912389138172987391836
->>> b = 3102312322817382781378217310273292379103701293729017
->>> print(a*b - bint(0)._mul_karatsuba(a,b))
-0
 """
 
 LONG_INT_MIN_BIT_LENGTH = 2000
@@ -54,9 +40,6 @@ class bint(int):
 
     def __eq__(self, other):
         return not(self ^ other)
-
-    def __neq__(self, other):
-        return self ^ other
 
     def __neg__(self):
         return ~self + 1
@@ -75,6 +58,40 @@ class bint(int):
         Auxilary substraction method.
         """
         return self._add(_self, -_other)
+
+    def __floordiv__(self, other):
+        assert type(other) in (int, bint)
+        return bint(self._floordiv(self, other))
+
+    def _floordiv(self, a, b):
+        """
+        Auxilary integer division method.
+        q - Quotient
+        r - Remainder
+        dd - Divident
+        d - Divisor
+        """
+
+        dd = a
+        r = dd
+        d = b
+        q = 0
+        sign_d =  d >> d.bit_length()
+        index = 1
+
+        while index <= 5:
+            print('index= ', index)
+            sign_r = r >> r.bit_length()
+
+            if sign_r ^ sign_d: # 01 10
+                q << 1
+                r =  self._add(r << 1, d)
+            else: # 00 11
+                q += 1
+                r =  self._add(r << 1, -d)
+            index += 1
+            print('r=', r)
+        return q
 
     def __add__(self, other):
         assert type(other) in (int, bint)
@@ -126,18 +143,13 @@ class bint(int):
         """
         Main multiplication method.
         """
+
         assert type(other) in (int, bint)
-        s_bits = self.bit_length()
-        o_bits = other.bit_length()
-        s_sign = self >> s_bits
-        o_sign = other >> o_bits
-        sign = s_sign ^ o_sign
+        sign = (self >> self.bit_length()) ^ (other >> other.bit_length())
 
         if sign:
-
 #            return bint(-self._mul(abs(self), abs(other)))
 #        return bint(self._mul(abs(self), abs(other)))
-
             return bint(-self._mul_karatsuba(abs(self), abs(other)))
         return bint(self._mul_karatsuba(abs(self), abs(other)))
 
@@ -160,8 +172,8 @@ class bint(int):
         while b >> b_bit != 0:
             b_bit_val = b & (1 << b_bit)
             if b_bit_val:
-#                prod = self._add(prod, a << b_bit)
-                prod += a << b_bit
+                prod = self._add(prod, a << b_bit)
+#                prod += a << b_bit
             b_bit += 1
         return prod
 
@@ -204,10 +216,10 @@ class bint(int):
         a1 = a >> k
         b0 =b & terms_mask
         b1 =b >> k
-#        sum_a0a1 = self._add(a0, a1)
-#        sum_b0b1 = self._add(b0, b1)
-        sum_a0a1 = a0 + a1
-        sum_b0b1 = b0 + b1
+        sum_a0a1 = self._add(a0, a1)
+        sum_b0b1 = self._add(b0, b1)
+#        sum_a0a1 = a0 + a1
+#        sum_b0b1 = b0 + b1
         prd_a0b0 = self._mul_karatsuba(a0, b0)
         prd_a1b1 = self._mul_karatsuba(a1, b1)
 
@@ -215,21 +227,20 @@ class bint(int):
         lo = prd_a0b0
         hi = prd_a1b1
         mi = self._mul_karatsuba(sum_a0a1, sum_b0b1)
-#        mi = self._add(mi, -prd_a0b0)
-#        mi = self._add(mi, -prd_a1b1)
-        mi = mi - prd_a0b0
-        mi = mi - prd_a1b1
+        mi = self._add(mi, -prd_a0b0)
+        mi = self._add(mi, -prd_a1b1)
+#        mi = mi - prd_a0b0
+#        mi = mi - prd_a1b1
 
         # shifting resulted terms
-#        lo, mi = lo & terms_mask, self._add(mi, lo >> k)
-#        mi, hi = mi & terms_mask, self._add(hi, mi >> k)
-        lo, mi = lo & terms_mask, mi + (lo >> k)
-        mi, hi = mi & terms_mask, hi + (mi >> k)
+        lo, mi = lo & terms_mask, self._add(mi, lo >> k)
+        mi, hi = mi & terms_mask, self._add(hi, mi >> k)
+#        lo, mi = lo & terms_mask, mi + (lo >> k)
+#        mi, hi = mi & terms_mask, hi + (mi >> k)
 
         return  (lo | mi << k | hi << k << k) >> shifts
 
-
-# test functions
+# performance test functions
 
 def nsqr (n):
     result = n
@@ -247,22 +258,22 @@ def fact(n):
     return result
 
 if __name__ == "__main__":
-#    import doctest
-#    doctest.testmod(verbose=False)
+    import doctest
+    doctest.testmod(verbose=False)
 
-    import random
-    a = random.getrandbits(499000)
-    b = random.getrandbits(599000)
+#    import random
+#    a = random.getrandbits(4990)
+#    b = random.getrandbits(5990)
 
 # performance comparison
-    import time
-    t0= time.perf_counter()
-    c = a*b
-    t1 = time.perf_counter()
-    print("Time elapsed: ", t1 - t0)
-
-    t0= time.perf_counter()
-    cb = bint(a)*bint(b)
-    t1 = time.perf_counter()
-    print("Time elapsed: ", t1 - t0)
-    print("Difference", c - cb)
+#    import time
+#    t0= time.perf_counter()
+#    c = a*b
+#    t1 = time.perf_counter()
+#    print("Time elapsed: ", t1 - t0)
+#
+#    t0= time.perf_counter()
+#    cb = bint(a)*bint(b)
+#    t1 = time.perf_counter()
+#    print("Time elapsed: ", t1 - t0)
+#    print("Difference", c - cb)
