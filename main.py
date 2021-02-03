@@ -85,10 +85,10 @@ class bint(int):
 
             if sign_r ^ sign_d: # 01 10
                 q << 1
-                r =  self._add(r << 1, d)
+                r =  self._add(r, d)
             else: # 00 11
-                q += 1
-                r =  self._add(r << 1, -d)
+                q = (q << 1) + 1
+                r =  self._add(r, -d)
             index += 1
             print('r=', r)
         return q
